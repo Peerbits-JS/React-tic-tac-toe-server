@@ -53,4 +53,21 @@ app.post("/game", gameController.postGame);
 app.patch("/game/:id", gameController.patchGame);
 app.get("/score", gameController.getScore);
 
+app.use("/img", express.static(path.resolve("dist", "build", "img")));
+app.use("/font", express.static(path.resolve("dist", "build", "font")));
+app.use("/css", express.static(path.resolve("dist", "build", "css")));
+app.use(
+    "/static/css",
+    express.static(path.resolve("dist", "build", "static", "css"))
+);
+app.use(
+    "/static/js",
+    express.static(path.resolve("dist", "build", "static", "js"))
+);
+// Default Route serves React SPA whose Router handles any specific route extension
+app.use("/*", (req: express.Request, res: express.Response) => {
+    res.setHeader("Cache-Control", "public, max-age=1000"); //Cache page for `max-age` ms
+    res.sendFile(path.resolve("dist", "build", "index.html"));
+});
+
 export default app;
